@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Concrete;
-using BusinessLayer.ValidationRules;
+using BusinessLayer.ValidationRules67;
 using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using FluentValidation.Results;
