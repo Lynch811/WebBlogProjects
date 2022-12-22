@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +27,34 @@ namespace WebBlogProjects
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+
+
+            services.AddMvc(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
+            services.AddMvc();
+            services.AddAuthentication(
+              CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(x =>
+                {
+                    x.LoginPath = "/Login/Index";
+                });
+            //------------------------------47.videodaki cookie settings derste anlatmýyor -----------------------------------------------------------
+            services.ConfigureApplicationCookie(options =>
+            {
+                //cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.LoginPath = "/Login/Index";
+                options.SlidingExpiration = true;
+            });
+            //----------------------------------------                          --------------------------------------------------------------------------
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +77,9 @@ namespace WebBlogProjects
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            //app.UseSession();
+            app.UseAuthentication();
 
             app.UseRouting();
 
