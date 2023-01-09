@@ -28,7 +28,7 @@ namespace WebBlogProjects.Controllers
             {
                 p.WriterStatus = true;
                 p.WriterAbout = "Deneme Test";
-                vm.WriterAdd(p);
+                vm.TAdd(p);
                 return RedirectToAction("Index", "Blog");
             }
             else
